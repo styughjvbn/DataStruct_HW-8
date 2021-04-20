@@ -64,6 +64,7 @@ int main()
 			break;
 		case 'd': case 'D':
 			printf("Your Key = ");
+			fflush(stdout);
 			scanf("%d", &key);
 			deleteNode(headnode, key);
 			break;
@@ -214,14 +215,17 @@ int insertFirst(listNode* h, int key) {//연결리스트의 처음에 노드삽입
 	return 1;
 }
 
-/**
- * list의 첫번째 노드 삭제
- */
-int deleteFirst(listNode* h) {
-
-
+int deleteFirst(listNode* h) {//연결리스트의 처음 노드 삭제
+	if(h->rlink==h){//연결리스트가 비었다면 함수를 종료한다.
+		printf("연결리스트가 비었습니다.\n");
+		return 0;
+	}
+	else{//연결리스트가 비어있지않다면
+		h->rlink=h->rlink->rlink;//해드노드의 rlink를 처음노드의 다음노드로 바꾼다.
+		free(h->rlink->llink);//바꾼 처음노드의 llink를 이용해서 본래의 처음노드를 해제한다.
+		h->rlink->llink=h;//바꾼 처음노드의 llink가 해드노드를 가르키게 만든다.
+	}
 	return 1;
-
 }
 
 
@@ -234,22 +238,50 @@ int invertList(listNode* h) {
 	return 0;
 }
 
-
-
-/**
- *  리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입
- **/
-int insertNode(listNode* h, int key) {
+int insertNode(listNode* h, int key) {//리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입
+	listNode* node=NULL;//삽입할 노드
+	listNode* search=h->rlink;
+	if(h->rlink==h){//만약 연결리스트가 비어있다면 처음에 노드를 삽입하고 함수를 종료한다.
+		insertFirst(h, key);
+		return 0;
+	}
+	else{//연결리스트가 비어있지않다면
+		while(search!=h){//연결리스트의 마지막까지 검사한다.
+			if(search->key>key){//입력받은 key값보다 큰 key를 가지는 노드를 발견했다면
+				node=(listNode*)malloc(sizeof(listNode));//삽입할 노드의 공간을 할당한다.
+				node->key=key;//key값 삽입
+				node->rlink=search;//rlink가 찾은 노드를 가르키게한다.
+				node->llink=search->llink;//llink가 찾은 노드의 전노드를 가르키게한다.
+				search->llink->rlink=node;//찾은 노드의 전노드의 rlink가 삽입할 노드를 가르키게한다.
+				search->llink=node;//찾은 노드의 llink가 삽입할 노드를 가르키게한다.
+				return 0;//함수를 종료한다.
+			}
+			search=search->rlink;//다음 노드를 검사한다.
+		}
+	}
+	insertLast(h,key);//연결리스트의 마지막까지 검사했는데도 입력받은 key값보다 큰 key를 가지는 노드가 없다면 이 노드는 마지막에 삽입된다.
 
 	return 0;
 }
 
-
-/**
- * list에서 key에 대한 노드 삭제
- */
-int deleteNode(listNode* h, int key) {
-
+int deleteNode(listNode* h, int key) {//리스트를 검색하여, 입력받은 key를 가지는 노드를 삭제
+	listNode* search=h->rlink;//삭제할 노드를 찾는 포인터
+	if(h->rlink==h){//연결리스트가 비었다면 함수를 종료한다.
+		printf("연결리스트가 비었습니다\n");
+		return 0;
+	}
+	else{//비어있지않다면
+		while(search!=h){//연결리스트의 마지막까지 검사한다.
+			if(search->key==key){//삭제할 노드를 찾았다면
+				search->rlink->llink=search->llink;//삭제할 노드의 앞노드의 llink를 삭제할 노드의 전노드로 바꾼다.
+				search->llink->rlink=search->rlink;//삭제할 노드의 전노드의 rlink를 삭제할 노드의 앞노드로 바꾼다.
+				free(search);//노드를 해제한다.
+				return 0;
+			}
+			search=search->rlink;//앞노드로 이동한다.
+		}
+	}
+	printf("찾는 key를 가지는 노드가 없습니다.\n");
 	return 0;
 }
 
