@@ -127,8 +127,6 @@ int freeList(listNode* h){
 	return 0;
 }
 
-
-
 void printList(listNode* h) {
 	int i = 0;
 	listNode* p;
@@ -162,7 +160,6 @@ void printList(listNode* h) {
 		p = p->rlink;
 		i++;
 	}
-
 }
 
 int insertLast(listNode* h, int key) {//연결리스트의 마지막에 노드 삽입
@@ -228,13 +225,18 @@ int deleteFirst(listNode* h) {//연결리스트의 처음 노드 삭제
 	return 1;
 }
 
-
-/**
- * 리스트의 링크를 역순으로 재 배치
- */
-int invertList(listNode* h) {
-
-
+int invertList(listNode* h) {//리스트의 링크를 역순으로 재 배치
+	listNode* tmp=NULL;//임시로 주소값을 저장한다.
+	if(h->rlink==h||h->rlink->rlink==h)//연결리스트의 노드가 없거나 한개라면 함수를 종료한다.
+		return 0;
+	else{//노드가 2개 이상이라면
+		do{
+			tmp=h->rlink;//rlink를 임시로 저장한다.
+			h->rlink=h->llink;//rlink를 llink와 바꾼다.
+			h->llink=tmp;//llink에 임시로 저장한 rlink를 넣는다.
+			h=h->rlink;//다음 노드로 간다.
+		}while(h->key!=-9999);//다시 해드노드로 복귀했다면 종료한다.
+	}
 	return 0;
 }
 
