@@ -32,6 +32,7 @@ int main()
 {
 	char command;
 	int key;
+	int check=0;//초기화가 진행됐는지 확인한다.
 	listNode* headnode=NULL;
 
 	do{
@@ -52,53 +53,81 @@ int main()
 		switch(command) {
 		case 'z': case 'Z':
 			initialize(&headnode);
+			check++;
 			break;
 		case 'p': case 'P':
-			printList(headnode);
+			if(check)
+				printList(headnode);
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'i': case 'I':
-			printf("Your Key = ");
-			fflush(stdout);
-			scanf("%d", &key);
-			insertNode(headnode, key);
+			if(check){
+				printf("Your Key = ");
+				fflush(stdout);
+				scanf("%d", &key);
+				insertNode(headnode, key);
+			}
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'd': case 'D':
-			printf("Your Key = ");
-			fflush(stdout);
-			scanf("%d", &key);
-			deleteNode(headnode, key);
+			if(check){
+				printf("Your Key = ");
+				fflush(stdout);
+				scanf("%d", &key);
+				deleteNode(headnode, key);
+			}
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'n': case 'N':
-			printf("Your Key = ");
-			fflush(stdout);
-			scanf("%d", &key);
-			insertLast(headnode, key);
+			if(check){
+				printf("Your Key = ");
+				fflush(stdout);
+				scanf("%d", &key);
+				insertLast(headnode, key);
+			}
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'e': case 'E':
-			deleteLast(headnode);
+			if(check)
+				deleteLast(headnode);
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'f': case 'F':
-			printf("Your Key = ");
-			fflush(stdout);
-			scanf("%d", &key);
-			insertFirst(headnode, key);
+			if(check){
+				printf("Your Key = ");
+				fflush(stdout);
+				scanf("%d", &key);
+				insertFirst(headnode, key);
+			}
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 't': case 'T':
-			deleteFirst(headnode);
+			if(check)
+				deleteFirst(headnode);
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'r': case 'R':
-			invertList(headnode);
+			if(check)
+				invertList(headnode);
+			else
+				printf("초기화를 먼저 진행해주세요\n");
 			break;
 		case 'q': case 'Q':
-			freeList(headnode);
+			if(check)
+				freeList(headnode);
 			break;
 		default:
 			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
 			break;
 		}
-
 	}while(command != 'q' && command != 'Q');
-
 	return 1;
 }
 
@@ -116,14 +145,13 @@ int initialize(listNode** h) {
 	return 1;
 }
 
-/* 메모리 해제 */
 int freeList(listNode* h){
-	h=h->rlink;//h가 처음 노드를 가르키게한다.
-	while(h->key!=-9999){//원래 헤드노드의 키값은 -9999이기때문에 h가 앞노드를 해제하면서 key값이 -9999라면 반복을 종료한다.
-		h=h->rlink;
-		free(h->llink);
+	listNode* node = h->rlink;//처음노드를 가르키게한다.
+	while(h!=node){//마지막노드를 해제했다면 node==해드노드(h) 기 때문에 반복이 종료된다.
+		node=node->rlink;
+		free(node->llink);
 	}
-	free(h);
+	free(h);//마지막으로 해드노드를 해제한다.
 	return 0;
 }
 
@@ -151,11 +179,11 @@ void printList(listNode* h) {
 	/* print addresses */
 	printf("\n---checking addresses of links\n");
 	printf("-------------------------------\n");
-	printf("head node: [llink]=%p, [head]=%p, [rlink]=%p\n", h->llink, h, h->rlink);
+	printf("head node: [llink]=%p, [head]=%p, [rlink]=%p\n", h->llink, h, h->rlink);//헤드 노드의 주소값 rlink, llink를 보여준다.
 
 	i = 0;
 	p = h->rlink;
-	while(p != NULL && p != h) {
+	while(p != NULL && p != h) {//연결리스트의 마지막까지 각각의 노드들의 주소값, rlink, llink값을 보여준다.
 		printf("[ [%d]=%d ] [llink]=%p, [node]=%p, [rlink]=%p\n", i, p->key, p->llink, p, p->rlink);
 		p = p->rlink;
 		i++;
