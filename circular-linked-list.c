@@ -35,6 +35,7 @@ int main()
 	int check=0;//초기화가 진행됐는지 확인한다.
 	listNode* headnode=NULL;
 
+	printf("[----- [서종원] [2018038031] -----]\n");
 	do{
 		printf("----------------------------------------------------------------\n");
 		printf("                  Doubly Circular Linked List                   \n");
